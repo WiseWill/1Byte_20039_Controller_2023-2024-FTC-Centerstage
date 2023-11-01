@@ -29,9 +29,16 @@ public class Controller extends OpMode{
     private DcMotorEx wheelFR;
     private DcMotorEx wheelBR;
 
+    private DcMotor intakeRight;
+    private DcMotor intakeLeft;
+
 
     private double previousRunTime;
     private double rotation;
+
+    //intake on bool
+    private boolean intakeOn;
+    private boolean aPressed;
 
 
 
@@ -45,6 +52,9 @@ public void init(){
     wheelBL = hardwareMap.get(DcMotorEx.class, "wheelBL");
     wheelBR = hardwareMap.get(DcMotorEx.class, "wheelBR");
 
+    //adding intake moters.
+    intakeRight = hardwareMap.get(DcMotor.class, "leftInta");
+    intakeLeft = hardwareMap.get(DcMotor.class, "RightInta");
 
     //allowing it to run withought encoders
     wheelFL.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
@@ -52,13 +62,20 @@ public void init(){
     wheelBL.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
     wheelBR.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
+    intakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    intakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+
 
     //setting makes some moters reversed due to their diffrent orintations of the robot.
-    //THIS WILL NEED TO PROBABLY BE CHANGED ONCE YOU GET IT RUNNING BENEDICT!!!!!!!!!!!!!!!!!
     wheelFL.setDirection(DcMotorSimple.Direction.REVERSE);
     wheelFR.setDirection(DcMotorSimple.Direction.FORWARD);
     wheelBL.setDirection(DcMotorSimple.Direction.FORWARD);
     wheelBR.setDirection(DcMotorSimple.Direction.REVERSE);
+
+    intakeRight.setDirection(DcMotorSimple.Direction.REVERSE);
+    intakeLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
     //tell driver initialization if complete - do not add vulgarity @isaiah @saiansh
     telemetry.addData("Status","Initialized");
@@ -76,6 +93,7 @@ public void init(){
     @Override
     public void loop(){
         basicDrive();
+        intake();
     }
 
     public void basicDrive(){
@@ -98,6 +116,29 @@ public void init(){
         wheelBR.setPower(bRPower);
 
     }
+
+    public void intake(){
+        if(gamepad1.a){
+            
+            if(aPressed){
+
+            } else{
+                aPressed = true;
+                intakeOn = !intakeOn;
+            }
+        } else {
+            aPressed = false;
+        }
+
+        if(intakeOn){
+            intakeRight.setPower(1);
+            intakeLeft.setPower(1);
+        } else {
+            intakeRight.setPower(0);
+            intakeLeft.setPower(0);
+        }
+    }
+
 
     public static void wait(int ms) {
         try {
