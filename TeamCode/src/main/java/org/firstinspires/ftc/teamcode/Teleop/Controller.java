@@ -64,7 +64,8 @@ public class Controller extends OpMode{
     private boolean armflip = false;
     private  boolean bpressed = false;
 
-public void init(){
+
+    public void init(){
 
  telemetry.addData("Status", "Initialized");
 
@@ -118,6 +119,8 @@ public void init(){
     initialposition = armSlideMoter.getCurrentPosition();
     minTickSlide = (int)(50 + initialposition);
     maxTickSlide = (int)(2700 + initialposition);
+
+
 }
     @Override
     public void init_loop(){} //runs after init but berfore play
@@ -135,6 +138,7 @@ public void init(){
         intake();
         armSlide();
         armflip();
+        telemetry.addData("Status",armflip);
     }
 
     private void armflip() {
@@ -152,9 +156,14 @@ public void init(){
 
 
         if(armflip){
-            armServo.setPosition(-90);
+            armServo.setPosition(.4);
         } else {
-            armServo.setPosition(0);
+            if(intakeOn){
+                armServo.setPosition(1);
+            } else {
+                armServo.setPosition(.6);
+            }
+
         }
     }
 
